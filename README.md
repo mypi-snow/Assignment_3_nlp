@@ -51,7 +51,6 @@ The proposed model delivers a **+22.73 percentage point** improvement in accurac
 nlp-toxic-detection/
 ├── NLP_A3_Toxic_Comment_Detection.ipynb   # Main Colab notebook (all code)
 ├── README.md                               # This file
-└── NLP_A3_Report.docx                     # Project report
 ```
 
 ---
