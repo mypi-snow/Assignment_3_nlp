@@ -1,6 +1,6 @@
 # Toxic Comment Detection using Bidirectional LSTM with Dual Embeddings
 
-**NLP Assessment 3 — University of Technology Sydney (42XXX Natural Language Processing)**
+**NLP Assessment 3 — University of Technology Sydney (42850 Natural Language Processing)**
 
 | Member | Student ID | Contribution |
 |--------|-----------|--------------|
