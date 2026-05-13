@@ -8,7 +8,7 @@ Original file is located at
 
 # Toxic Comment Detection using Bi-LSTM with Dual Embeddings
 
-**NLP Assessment 3 — Project Development**
+**NLP Assessment 3 - Project Development**
 
 Online platforms face the constant challenge of identifying toxic, hateful, or abusive
 comments before they harm communities.  Manual moderation does not scale to millions of
@@ -17,7 +17,7 @@ daily posts, making **automated toxic comment detection** a high-impact NLP prob
 In this notebook we:
 1. Download and preprocess the **Jigsaw Toxic Comment Classification** dataset.
 2. Train a **baseline Simple LSTM** model as the reference.
-3. Train our **proposed model — Bidirectional LSTM with Dual Embeddings**
+3. Train our **proposed model - Bidirectional LSTM with Dual Embeddings**
    (pretrained GloVe + task-specific trainable embeddings).
 4. Compare both models using accuracy, F1-score, and confusion matrices.
 
@@ -75,14 +75,14 @@ import kagglehub, glob, zipfile, os
 path = kagglehub.competition_download("jigsaw-toxic-comment-classification-challenge")
 print("Downloaded to:", path)
 
-# ── List everything that was downloaded ───────────────────────────────────────
+#List everything that was downloaded
 all_files = []
 for root, dirs, files in os.walk(path):
     for f in files:
         all_files.append(os.path.join(root, f))
 print("Files found:", all_files)
 
-# ── Extract any zip files ─────────────────────────────────────────────────────
+#Extract any zip files
 for fpath in all_files:
     if fpath.endswith(".zip"):
         print(f"Extracting {fpath} ...")
@@ -147,7 +147,7 @@ df[["text", "label"]].head(3)
 
 """## 4. Text preprocessing
 
-We apply light normalisation — lowercase, remove URLs and special characters — and build a
+We apply light normalisation - lowercase, remove URLs and special characters - and build a
 word-level vocabulary from the **training split only** to prevent data leakage.
 Unknown words at inference time are mapped to `<UNK>`; sequences are zero-padded or
 truncated to `MAX_SEQ_LEN`.
@@ -223,7 +223,7 @@ GLOVE_FILE = "glove.6B.50d.txt"
 
 def download_glove(url=GLOVE_URL, txt_file=GLOVE_FILE):
     if os.path.exists(txt_file):
-        print(f"'{txt_file}' already present — skipping download.")
+        print(f"'{txt_file}' already present - skipping download.")
         return
     print("Downloading GloVe 6B embeddings (~82 MB)…")
     response = requests.get(url, stream=True)
@@ -286,7 +286,7 @@ print(f"Train batches: {len(train_loader)}  "
       f"|  Val batches: {len(val_loader)}  "
       f"|  Test batches: {len(test_loader)}")
 
-"""## 7. Baseline model — Simple LSTM
+"""## 7. Baseline model - Simple LSTM
 
 The baseline uses a **single randomly-initialised embedding layer** fed into a
 **unidirectional LSTM**.  The final hidden state is passed through a dropout layer and a
@@ -342,25 +342,25 @@ n_params = sum(p.numel() for p in baseline_model.parameters() if p.requires_grad
 print(f"SimpleLSTM  |  Trainable parameters: {n_params:,}")
 print(baseline_model)
 
-"""## 8. Proposed model — Bi-LSTM with Dual Embeddings
+"""## 8. Proposed model - Bi-LSTM with Dual Embeddings
 
 ### Why this architecture?
 
-**Challenge 1 — Limited labelled data for toxic language.**  
+**Challenge 1 - Limited labelled data for toxic language.**  
 Toxic comments are relatively rare in the wild.  Pretrained GloVe vectors provide semantic
 knowledge of words (including slurs, intensifiers, and abusive vocabulary) learned from
 billions of tokens without needing labelled toxic examples.
 
-**Challenge 2 — Context polarity.**  
+**Challenge 2 - Context polarity.**  
 The same word can be benign or toxic depending on surrounding context
 (*"I hate broccoli"* vs. *"I hate you"*).  A unidirectional LSTM can miss right-to-left
 cues.  A **Bidirectional LSTM** reads the sequence in both directions, giving each token
 access to its full sentence context.
 
-**Challenge 3 — Generalisation vs. specialisation.**  
+**Challenge 3 - Generalisation vs. specialisation.**  
 A single embedding must balance general semantics and task-specific surface cues.
-By using **two separate embedding layers** concatenated together — one pretrained (GloVe)
-and one freely trainable — the model can preserve broad linguistic knowledge while also
+By using **two separate embedding layers** concatenated together - one pretrained (GloVe)
+and one freely trainable - the model can preserve broad linguistic knowledge while also
 learning patterns specific to online toxic language (abbreviations, intentional
 misspellings, punctuation patterns).
 
@@ -419,7 +419,7 @@ class BiLSTMDualEmbed(nn.Module):
         emb = self.dropout(torch.cat([e1, e2], dim=-1))  # (B, T, glove+train)
 
         _, (h, _) = self.lstm(emb)
-        # h: (2, B, hidden_dim) — forward [0] and backward [1]
+        # h: (2, B, hidden_dim) - forward [0] and backward [1]
         out = torch.cat([h[0], h[1]], dim=-1)    # (B, hidden_dim*2)
         out = self.dropout(out)
         return self.fc(out)                      # (B, num_classes)
@@ -566,20 +566,20 @@ ax.plot(epochs, history_proposed["val_acc"],   "r-",  label="Proposed val")
 ax.set_title("Accuracy Curves"); ax.set_xlabel("Epoch"); ax.set_ylabel("Accuracy")
 ax.legend(); ax.grid(alpha=0.3)
 
-# ── Confusion matrix — Baseline ───────────────────────────────────────────────
+# ── Confusion matrix - Baseline ───────────────────────────────────────────────
 cm_b = confusion_matrix(labels_b, preds_b)
 sns.heatmap(cm_b, annot=True, fmt="d", cmap="Blues", ax=axes[1, 0],
             xticklabels=["Non-toxic", "Toxic"],
             yticklabels=["Non-toxic", "Toxic"])
-axes[1, 0].set_title("Confusion Matrix — Baseline LSTM")
+axes[1, 0].set_title("Confusion Matrix - Baseline LSTM")
 axes[1, 0].set_ylabel("True Label"); axes[1, 0].set_xlabel("Predicted")
 
-# ── Confusion matrix — Proposed ───────────────────────────────────────────────
+# ── Confusion matrix - Proposed ───────────────────────────────────────────────
 cm_p = confusion_matrix(labels_p, preds_p)
 sns.heatmap(cm_p, annot=True, fmt="d", cmap="Reds", ax=axes[1, 1],
             xticklabels=["Non-toxic", "Toxic"],
             yticklabels=["Non-toxic", "Toxic"])
-axes[1, 1].set_title("Confusion Matrix — Bi-LSTM Dual Embed")
+axes[1, 1].set_title("Confusion Matrix - Bi-LSTM Dual Embed")
 axes[1, 1].set_ylabel("True Label"); axes[1, 1].set_xlabel("Predicted")
 
 plt.suptitle("Toxic Comment Detection: Simple LSTM vs. Bi-LSTM + Dual Embeddings",
@@ -623,15 +623,15 @@ for c in demo_comments:
 
 """## 14. Conclusion
 
-We addressed the problem of **automated toxic comment detection** — a high-impact NLP task
+We addressed the problem of **automated toxic comment detection** - a high-impact NLP task
 for maintaining safe online communities.
 
 ### Summary of results
 
 | Model | Test Accuracy | F1 (macro) |
 |---|:---:|:---:|
-| Simple LSTM (baseline) | *(see output above)* | *(see output above)* |
-| **Bi-LSTM + Dual Embeddings** | ***(see output above)*** | ***(see output above)*** |
+| Simple LSTM (baseline) | 0.6547 | 0.6465 |
+| **Bi-LSTM + Dual Embeddings** | **0.8820** | **0.8819** |
 
 ### Why the proposed model performs better
 
@@ -653,6 +653,4 @@ for maintaining safe online communities.
 
 ### GitHub repository
 > **Code**: `https://github.com/mypi-snow/Assignment_3_nlp`  
-
 """
-
