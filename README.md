@@ -53,7 +53,7 @@ The proposed model dramatically reduces false positives — important for modera
 
 ```
 Assignment_3_nlp/
-├── NLP_A3_Toxic_Comment_Detection.ipynb   # Main notebook (all code, end-to-end)        # Project report
+├── NLP_A3_Toxic_Comment_Detection.ipynb   # Main notebook (all code, end-to-end)       
 └── README.md                              # This file
 ```
 
