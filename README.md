@@ -188,6 +188,3 @@ The only differences between the two models are dual embeddings vs. single train
 
 ---
 
-## Generative AI Acknowledgement
-
-Generative AI tools were used to assist with language refinement, structure checking, and editing suggestions for the written report. The group reviewed and revised all final content, verified code outputs against the notebook, and remains responsible for the submitted work.
