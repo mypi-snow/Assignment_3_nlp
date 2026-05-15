@@ -6,9 +6,9 @@
 
 | Member | Student ID | Contribution |
 |--------|-----------|--------------|
-| Pearl Jennifer | 25715386 | Problem definition, Introduction & Background, dataset acquisition, exploration, and class imbalance analysis |
-| Yash Mehta | 25731035 | Methodology, model architecture design, GloVe embedding pipeline, Bi-LSTM implementation, and debugging |
-| Raj Chhadia | 25215272 | Experiment Results, training loop, evaluation metrics, visualisation, report assembly, and GitHub setup |
+| Pearl Jennifer | 25715386 | Problem definition, Introduction & Background, dataset acquisition, exploration, class imbalance analysis, report assembly |
+| Yash Mehta | 25731035 | Methodology, model architecture design, GloVe embedding pipeline, Bi-LSTM implementation, debugging, and GitHub setup |
+| Raj Chhadia | 25215272 | Experiment Results, training loop, evaluation metrics, and visualisation |
 
 ---
 
